@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import {Line} from 'react-chartjs-2';
 
-const data = {
+const data2 = {
   labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
   datasets: [
     {
@@ -29,11 +29,32 @@ const data = {
   ]
 };
 
-export class Home extends React.Component<RouteComponentProps<{}>, {}> {
+interface LinijeState {
+    linije: string[]
+}
+
+export class Home extends React.Component<RouteComponentProps<{}>, LinijeState> {
+    
+    constructor() {
+        super();
+        this.state = { linije: [] };
+    }
+    componentDidMount(){
+        fetch('api/Proba')
+        .then(results => {return results.json()})
+        .then(data => {
+            this.setState({linije: data});
+        });
+    }
+    
     public render() {
-        return <div>
+        let lins = this.state.linije.map(function(linija){
+            return <li>{linija} </li>;
+        })
+        return (<div>
             <h1>Hello, world!</h1>
-            <Line data={data} />
+            <Line data={data2} />
+            <h2><ul> {lins}</ul> </h2>
             <p>Welcome to your new single-page application, built with:</p>
             <ul>
                 <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
@@ -53,6 +74,6 @@ export class Home extends React.Component<RouteComponentProps<{}>, {}> {
                 For larger applications, or for server-side prerendering (i.e., for <em>isomorphic</em> or <em>universal</em> applications), you should consider using a Flux/Redux-like architecture.
                 You can generate an ASP.NET Core application with React and Redux using <code>dotnet new reactredux</code> instead of using this template.
             </p>
-        </div>;
+        </div>)
     }
 }
