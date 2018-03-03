@@ -29,15 +29,28 @@ const data2 = {
   ]
 };
 
+interface GraphCoord {
+    id: number;
+    x: number;
+    y: number;
+}
+
 interface LinijeState {
-    linije: string[]
+    linije: string[];
+    graphs: GraphCoord[];
 }
 
 export class Home extends React.Component<RouteComponentProps<{}>, LinijeState> {
     
     constructor() {
         super();
-        this.state = { linije: [] };
+        this.state = { linije: [], graphs: [] };
+
+        fetch('api/Coords')
+            .then(result => { return result.json() as Promise<GraphCoord[]> })
+            .then(data3 => {
+                this.setState({ graphs: data3 });
+            });
     }
     componentDidMount(){
         fetch('api/Proba')
@@ -45,16 +58,26 @@ export class Home extends React.Component<RouteComponentProps<{}>, LinijeState> 
         .then(data => {
             this.setState({linije: data});
         });
+
+       
     }
     
     public render() {
-        let lins = this.state.linije.map(function(linija){
-            return <li>{linija} </li>;
+        let lins = this.state.linije.map(function(linija, index){
+            return <li key={index}>{linija} </li>;
         })
+
+        let koords = this.state.graphs.map(function(koord, index){
+            return <div key={index}><p> {koord.id} </p>
+            <p> {koord.x} </p>
+            <p> {koord.y} </p> </div>;
+        })
+
         return (<div>
             <h1>Hello, world!</h1>
             <Line data={data2} />
             <h2><ul> {lins}</ul> </h2>
+            <h3> {koords}</h3>
             <p>Welcome to your new single-page application, built with:</p>
             <ul>
                 <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>

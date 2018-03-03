@@ -1,8 +1,11 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 
+
+
 interface CounterState {
     currentCount: number;
+
 }
 
 export class Counter extends React.Component<RouteComponentProps<{}>, CounterState> {
@@ -12,6 +15,8 @@ export class Counter extends React.Component<RouteComponentProps<{}>, CounterSta
     }
 
     public render() {
+
+
         return <div>
             <h1>Counter</h1>
 
@@ -20,6 +25,7 @@ export class Counter extends React.Component<RouteComponentProps<{}>, CounterSta
             <p>Current count: <strong>{ this.state.currentCount }</strong></p>
 
             <button onClick={ () => { this.incrementCounter() } }>Increment</button>
+            
         </div>;
     }
 
